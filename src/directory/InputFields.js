@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { unitGroup } from './UnitArray';
 import getConvertedUnit from '../Configration/Configration';
+import getUnit from '../Configration/Units';
 
 class FirstInput extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            units:[],
             firstUnit: 0.0,
             firstUnitType: '',
             secondUnitType: '',
@@ -24,14 +25,16 @@ class FirstInput extends Component {
     }
 
     setDropdownState = async (props) => {
-        const firstItem = unitGroup.map((values, index) => {
-            return values[this.props.param][0]
+        await getUnit(this.props.param).then((resp)=> {
+            this.setState({units:resp.data})
+            console.log(this.state.units);
         })
-        this.setState(({ firstUnitType: firstItem[0] }));
-        this.setState(({ secondUnitType: firstItem[0] }));
+        this.setState(({ firstUnitType: this.state.units[0] }));
+        this.setState(({ secondUnitType: this.state.units[0] }));
+        this.submitData();
     }
 
-    componentWillMount() {
+    componentWillMount=()=>{
         this.setDropdownState()
     }
 
@@ -51,7 +54,6 @@ class FirstInput extends Component {
             "firstUnitType": this.state.secondUnitType,
             "secondUnitType": this.state.firstUnitType
         }
-
         this.getResponse(unitDTO, 1)
     }
 
@@ -61,14 +63,13 @@ class FirstInput extends Component {
             "firstUnitType": this.state.firstUnitType,
             "secondUnitType": this.state.secondUnitType
         }
-
         this.getResponse(unitDTO, 2)
     }
 
     getResponse = (unitDTO, fieldNo) => {
         getConvertedUnit(unitDTO).then((resp) => {
             console.log("response--> ", resp);
-            if (fieldNo == 2) {
+            if (fieldNo === 2) {
                 this.setState({
                     secondUnit: resp.data
                 })
@@ -80,22 +81,15 @@ class FirstInput extends Component {
             }
         }).catch((err) => {
             console.log("somethin went wronng");
-
         })
     }
 
-
-
     render() {
-
-        const listItems = unitGroup.map((value, index) => {
-            return (
-                value[this.props.param].map((value, index) => {
+                const listItems = this.state.units.map((value, index) => {
                     return (
                         <option key={value}>{value}</option>
                     )
-                }))
-        })
+                })
 
         return (
             <div className="unitDiv">

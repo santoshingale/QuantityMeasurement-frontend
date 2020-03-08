@@ -1,15 +1,22 @@
 import React, { Component } from 'react'
 import FirstInput from './InputFields';
-import { unitGroup } from './UnitArray';
+import getUnitType from '../Configration/UnitTypeConfig';
 class UnitSelector extends Component {
 
     constructor() {
         super()
         this.state = {
-            unitGroup: "LENGTH"
+            unitGroup: "LENGTH",
+            unitTypes:[]
         }
-
         this.firstInput = React.createRef()
+    }
+
+    UNSAFE_componentWillMount = () =>{
+        getUnitType().then((resp)=>{
+            this.setState({unitTypes:resp.data})
+            this.setState({unitGroup:resp.data[0]})
+        })
     }
 
     selectUnitGroup = async (event) => {
@@ -18,8 +25,7 @@ class UnitSelector extends Component {
     }
 
     render() {
-        const key = Object.keys(unitGroup[0])
-        const listItems = key.map((value, index) => {
+        const listItems = this.state.unitTypes.map((value, index) => {
             return (
                 <option key={index}>{value}</option>
             )

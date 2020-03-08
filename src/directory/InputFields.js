@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
-import getConvertedUnit from '../Configration/Configration';
+import getConvertedUnit from '../Configration/UnitConvertor';
 import getUnit from '../Configration/Units';
+import Styles from '../snackbar.module.css'
 
 class FirstInput extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            units:[],
+            units: [],
             firstUnit: 0.0,
             firstUnitType: '',
             secondUnitType: '',
-            secondUnit: 0.0
+            secondUnit: 0.0,
+            status: "",
+            isActive: false
         }
     }
 
@@ -25,8 +28,8 @@ class FirstInput extends Component {
     }
 
     setDropdownState = async (props) => {
-        await getUnit(this.props.param).then((resp)=> {
-            this.setState({units:resp.data})
+        await getUnit(this.props.param).then((resp) => {
+            this.setState({ units: resp.data })
             console.log(this.state.units);
         })
         this.setState(({ firstUnitType: this.state.units[0] }));
@@ -34,7 +37,7 @@ class FirstInput extends Component {
         this.submitData();
     }
 
-    componentWillMount=()=>{
+    componentWillMount = () => {
         this.setDropdownState()
     }
 
@@ -68,28 +71,38 @@ class FirstInput extends Component {
 
     getResponse = (unitDTO, fieldNo) => {
         getConvertedUnit(unitDTO).then((resp) => {
-            console.log("response--> ", resp);
             if (fieldNo === 2) {
                 this.setState({
-                    secondUnit: resp.data
+                    secondUnit: resp.data.secondUnit
                 })
             }
             else {
                 this.setState({
-                    firstUnit: resp.data
+                    firstUnit: resp.data.secondUnit
                 })
             }
-        }).catch((err) => {
-            console.log("somethin went wronng");
+            this.setState({ status: resp.data.message });
+
+        }).catch((error) => {
+            this.setState({ status: error.message });
         })
+        this.openSnackBar()
+    }
+
+    openSnackBar = () => {
+        this.setState({ isActive: true }, () => {
+            setTimeout(() => {
+                this.setState({ isActive: false });
+            }, 3000);
+        });
     }
 
     render() {
-                const listItems = this.state.units.map((value, index) => {
-                    return (
-                        <option key={value}>{value}</option>
-                    )
-                })
+        const listItems = this.state.units.map((value, index) => {
+            return (
+                <option key={value}>{value}</option>
+            )
+        })
 
         return (
             <div className="unitDiv">
@@ -102,6 +115,9 @@ class FirstInput extends Component {
                 <select className="dropDown" style={{ order: 4 }} value={this.state.secondUnitType} onChange={this.setSecondUnitType}>
                     {listItems}
                 </select>
+                <div className={this.state.isActive ? [Styles.snackbar, Styles.show].join(" ") : Styles.snackbar}>
+                    {this.state.status}
+                </div>
             </div>
         )
     }

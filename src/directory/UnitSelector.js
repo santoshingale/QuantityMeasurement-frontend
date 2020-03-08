@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import FirstInput from './InputFields';
+import InputFields from './InputFields';
 import getUnitType from '../Configration/UnitTypeConfig';
 class UnitSelector extends Component {
 
@@ -7,15 +7,15 @@ class UnitSelector extends Component {
         super()
         this.state = {
             unitGroup: "LENGTH",
-            unitTypes:[]
+            unitTypes: []
         }
         this.firstInput = React.createRef()
     }
 
-    UNSAFE_componentWillMount = () =>{
-        getUnitType().then((resp)=>{
-            this.setState({unitTypes:resp.data})
-            this.setState({unitGroup:resp.data[0]})
+    UNSAFE_componentWillMount = () => {
+        getUnitType().then((resp) => {
+            this.setState({ unitTypes: resp.data })
+            this.setState({ unitGroup: resp.data[0] })
         })
     }
 
@@ -25,7 +25,7 @@ class UnitSelector extends Component {
     }
 
     render() {
-        const listItems = this.state.unitTypes.map((value, index) => {
+        const unitTypelist = this.state.unitTypes.map((value, index) => {
             return (
                 <option key={index}>{value}</option>
             )
@@ -33,9 +33,9 @@ class UnitSelector extends Component {
         return (
             <div className="subDiv">
                 <select className="unitSelector" value={this.state.UnitSelector} onChange={this.selectUnitGroup}>
-                    {listItems});
+                    {unitTypelist});
                 </select>
-                <FirstInput ref={this.firstInput} param={this.state.unitGroup} />
+                <InputFields ref={this.firstInput} param={this.state.unitGroup} />
             </div>
         )
     }

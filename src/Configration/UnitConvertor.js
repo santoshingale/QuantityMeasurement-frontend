@@ -8,9 +8,6 @@ function getConvertedUnit(unitDTO) {
     data: unitDTO
   });
 }
-
-
-
 //}
 
 

@@ -1,4 +1,4 @@
-import {postURL , getURLForRequestUnits , getURLForRequestUnitType} from './Enviroment'
+import {postURL , getURLForRequestUnits , getURLForRequestUnitType} from './Environment'
 const axios = require('axios')
 
 export function getConvertedUnit(unitDTO) {

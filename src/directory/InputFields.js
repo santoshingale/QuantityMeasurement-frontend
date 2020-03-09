@@ -29,7 +29,6 @@ class FirstInput extends Component {
     setDropdownState = async (props) => {
         await getUnit(this.props.param).then((resp) => {
             this.setState({ units: resp.data })
-            console.log(this.state.units);
         })
         this.setState(({ firstUnitType: this.state.units[0] }));
         this.setState(({ secondUnitType: this.state.units[0] }));

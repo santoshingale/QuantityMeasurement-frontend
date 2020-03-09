@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import getConvertedUnit from '../Configration/UnitConvertor';
-import getUnit from '../Configration/Units';
+import {getConvertedUnit,getUnit} from '../Configration/Configration';
 import Styles from '../snackbar.module.css'
 
 class FirstInput extends Component {
@@ -93,7 +92,7 @@ class FirstInput extends Component {
         this.setState({ isActive: true }, () => {
             setTimeout(() => {
                 this.setState({ isActive: false });
-            }, 3000);
+            }, 6000);
         });
     }
 

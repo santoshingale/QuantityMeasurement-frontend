@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import InputFields from './InputFields';
-import getUnitType from '../Configration/UnitTypeConfig';
+import {getUnitType} from '../Configration/Configration';
 class UnitSelector extends Component {
 
     constructor() {
@@ -12,8 +12,8 @@ class UnitSelector extends Component {
         this.firstInput = React.createRef()
     }
 
-    UNSAFE_componentWillMount = () => {
-        getUnitType().then((resp) => {
+    UNSAFE_componentWillMount = async() => {
+       await getUnitType().then((resp) => {
             this.setState({ unitTypes: resp.data })
             this.setState({ unitGroup: resp.data[0] })
         })
@@ -25,6 +25,7 @@ class UnitSelector extends Component {
     }
 
     render() {
+
         const unitTypelist = this.state.unitTypes.map((value, index) => {
             return (
                 <option key={index}>{value}</option>
